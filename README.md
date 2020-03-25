@@ -15,10 +15,11 @@ sudo nano /etc/hosts
 127.0.0.1	adminer.local
 
 ## set max_map_count
-sysctl -w vm.max_map_count=262144
+sudo sysctl -w vm.max_map_count=262144
 
 ## run stack
 docker swarm init
+docker swarm join-token manager
 docker stack deploy --compose-file portainer-agent-stack.yml devops
     ou
 docker stack deploy --compose-file devops-stack.yml devops

@@ -94,15 +94,15 @@ services:
     postgres:
         image: postgres:latest
         environment:
-            POSTGRES_USER: postgres
             POSTGRES_DB_PASSWORD_FILE: /run/secrets/postgres_password
-            POSTGRES_DB: sonarqube
         volumes:
             - postgres_data:/var/lib/postgresql/data
         networks:
             - postgres_net
         secrets:
-            - postgres_password
+            - source: postgres_password
+              target: /run/secrets/postgres_password
+              mode: 444
         deploy:
             mode: replicated
             replicas: 1
@@ -126,6 +126,8 @@ services:
         image: sonarqube:lts
         depends_on:
             - postgres
+        sysctls:
+            - vm.max_map_count=262144
         environment:
             - sonar.jdbc.username=postgres
             - sonar.jdbc.password=postgres
@@ -206,7 +208,7 @@ configs:
         file: ./nginx_conf/conf_d/portainer.conf
     jenkins_proxy_conf:
         file: ./nginx_conf/conf_d/jenkins.conf
-    sonar_proxy_conf:
+    sonarqube_proxy_conf:
         file: ./nginx_conf/conf_d/sonar.conf
     nexus_proxy_conf:
         file: ./nginx_conf/conf_d/nexus.conf
