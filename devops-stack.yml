@@ -128,8 +128,6 @@ services:
         image: sonarqube:lts
         depends_on:
             - postgres
-        sysctls:
-            - vm.max_map_count=262144
         environment:
             - sonar.jdbc.username=postgres
             - sonar.jdbc.password=postgres
